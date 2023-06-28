@@ -11,7 +11,7 @@ const USER_CONFIG = {
     key: process.env.TIAN_API,
     morningGreeting: false,
     eveningGreeting: false,
-    weather: 0,
+    weather: 3,
     networkHot: 0,
     networkHotType: 'default'
   },
