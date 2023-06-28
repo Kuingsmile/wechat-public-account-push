@@ -7,6 +7,15 @@
  */
 const USER_CONFIG = {
 
+  TIAN_API: {
+    key: process.env.TIAN_API,
+    morningGreeting: false,
+    eveningGreeting: false,
+    weather: 0,
+    networkHot: 0,
+    networkHotType: 'default'
+  },
+
   // 使用微信测试号：公众号APP_ID
   APP_ID: '',
 

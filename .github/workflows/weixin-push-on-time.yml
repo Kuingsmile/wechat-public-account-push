@@ -36,4 +36,5 @@ jobs:
       APP_ID: ${{secrets.APP_ID}}
       APP_SECRET: ${{secrets.APP_SECRET}}
       USER_INFO: ${{secrets.USER_INFO}}
+      TIAN_API: ${{secrets.TIAN_API}}
 
