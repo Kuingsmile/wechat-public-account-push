@@ -1,596 +1,310 @@
-<div align="center">
-
-
-<h1 align="center">
-
-
-wechat-public-account-push
-
-
-</h1>
-
-
-[![GitHub Stars](https://img.shields.io/github/stars/wangxinleo/wechat-public-account-push?style=flat-square)](https://github.com/wangxinleo/wechat-public-account-push/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/wangxinleo/wechat-public-account-push?style=flat-square)](https://github.com/wangxinleo/wechat-public-account-push/network/members)
-[![GitHub Issues](https://img.shields.io/github/issues/wangxinleo/wechat-public-account-push?style=flat-square)](https://github.com/wangxinleo/wechat-public-account-push/issues)
-[![GitHub Contributors](https://img.shields.io/github/contributors/wangxinleo/wechat-public-account-push?style=flat-square)](https://github.com/wangxinleo/wechat-public-account-push/graphs/contributors)
-[![GitHub License](https://img.shields.io/github/license/wangxinleo/wechat-public-account-push?style=flat-square)](https://github.com/wangxinleo/wechat-public-account-push/blob/master/LICENSE)
-![Unit Test](https://github.com/wangxinleo/wechat-public-account-push/actions/workflows/unit-test.yml/badge.svg)
-
-
-</div>
-
-**wechat-public-account-push
-是一个用于微信公众号/微信测试号给用户执行微信推送的脚本，改编自目前小红书/知乎突然火起来的【给女朋友的七夕浪漫，微信自动推送消息】，用Nodejs实现而成。**
-
-**如果这个项目很有意思，帮忙右上角点个 star✨ 支持我们 ❤❤**
-
-**如果有任何需要帮助可以联系wangxin.leo@outlook.com ❤❤**
-
-[>>> 点这里获取更新公告✨](https://github.com/wangxinleo/wechat-public-account-push/discussions/categories/announcements)
-
-<h3 style="color: red;">重要通知：</h3>
-
-**微信团队于2023-05-04日晚12点下线【自定义颜色】、【emoji表情符号】、【自定义换行】、【尾部/备注字段】。**
-
-**【微信测试号】的推送服务已受到影响，原有的推送模板需要用户自行修改，详见 [如何修复因2023-05-04微信推送服务规范整改，导致推送服务异常](https://github.com/wangxinleo/wechat-public-account-push/issues/326)**
-
-**使用服务号推送不受影响**
-
----
-
-详细功能如下：
-
-- **支持多个收件人设置成不同的测试号模板，专属定制更贴心**
-- **推送每日天气**
-- **各类文案集锦**
-- **支持农历生日提醒**
-- **每日/明日/每周/每年星座运势**
-- **大学生课程表**
-- **前N个值得纪念的日子**
-- **推送回执**
-- **自定义出参，模板定制更个性**
-- **网页自动生成配置插件**
-- **支持gitee go / github actions 不需要拥有服务器，白嫖actions执行，每天定时发送**
-- **支持本地化部署每天定时发送**
-- **支持多推送渠道**
-
----
-[目录]
-
-<!-- TOC depthFrom:2 -->
-
-- [1. 如何使用](#1-如何使用)
-  - [1.1. 第一步：选用一个合适的消息通道](#11-第一步选用一个合适的消息通道)
-  - [1.2. 第二步：完成配置文件，并运行wechat-public-account-push](#12-第二步完成配置文件并运行wechat-public-account-push)
-    - [1.2.1 方式一：使用网页工具自动生成Github-Action配置(不准时，排队执行，胜在免费)](#121-方式一使用网页工具自动生成github-action配置不准时排队执行胜在免费)
-    - [1.2.2 方式二：使用Github-Action(不准时，排队执行，胜在免费)](#122-方式二使用github-action不准时排队执行胜在免费)
-    - [1.2.3 方式三：使用Gitee-go(定时任务收费，前200分钟免费，非常准时)](#123-方式三使用gitee-go定时任务收费前200分钟免费非常准时)
-    - [1.2.4 方式四：下载程序包到本地或服务器运行(需要有自己的服务器，使用系统的定时任务非常准时)](#124-方式四下载程序包到本地或服务器运行需要有自己的服务器使用系统的定时任务非常准时)
-    - [1.2.5 方式五：使用云函数运行（需要使用运营商提供的 __付费__ 云函数功能，非常准时)](#125-方式五使用云函数运行需要使用运营商提供的-付费-云函数功能非常准时)
-- [2. 公众号模板参数说明](#2-公众号模板参数说明)
-- [3. config参数说明](#3-config参数说明)
-- [4. template-config推送模板参数说明](#4-template-config推送模板参数说明)
-- [5. 常用的推送模板样例](#5-常用的推送模板样例)
-- [6. GitHub/Gitee 如何更改自动执行时间](#6-githubgitee-如何更改自动执行时间)
-  - [6.1 github action如何更改自动执行时间](#61-github-action如何更改自动执行时间)
-  - [6.2 gitee go如何更改自动执行时间](#62-gitee-go如何更改自动执行时间)
-- [7. 常见问题](#7-常见问题)
-- [8. 版本发布及更新](#8-版本发布及更新)
-  - [8.1 重新fork](#81-重新fork)
-  - [8.2 GitHub Fetch Upstream Branch](#82-github-fetch-upstream-branch)
-  - [8.3 actions 脚本自动](#83-actions-脚本自动)
-- [9. 成为开源贡献成员](#9-成为开源贡献成员)
-  - [9.1 贡献代码](#91-贡献代码)
-  - [9.2 贡献文档](#92-贡献文档)
-- [10. 致谢](#10-致谢)
-  - [贡献/参与者](#贡献参与者)
-- [11. wechat-public-account-push答疑群](#11-wechat-public-account-push答疑群)
-- [12. 其他](#12-其他)
-
-<!-- /TOC -->
-
-
-**Github 仓库地址：[wangxinleo/wechat-public-account-push](https://github.com/wangxinleo/wechat-public-account-push)**
-
-~~**Github
-镜像仓库地址（国内备用01）：[wangxinleo/wechat-public-account-push](https://hub.fastgit.xyz/wangxinleo/wechat-public-account-push)**~~
-
-~~**Github
-镜像仓库地址（国内备用02）：[wangxinleo/wechat-public-account-push](https://hub.njuu.cf/wangxinleo/wechat-public-account-push)**~~
-
-**Gitee
-国内仓库地址：[wangxinleo/wechat-public-account-push](https://gitee.com/wangxin_leo/wechat-public-account-push)**
-
-**注意：**
-
-- **本仓库开源的初衷是看不下去营销号用这么一个简单的脚本刻意在网络上肆意要求加群/关注微信公众号才能获取源码的行为**
-- **本应用仅用于学习和测试，作者本人并不对其负责，请于运行测试完成后自行删除，请勿滥用！**
-- **所有代码都是开源且透明的，任何人均可查看，程序不会保存或滥用任何用户的个人信息**
-- **请仔细阅读配置文档，自己对自己的配置负责**
-
-运行图示：
-
-![图片无法查看请移步顶部访问 国内备用仓库地址](img/how-to-use/run-img.jpg)
-
-![图片无法查看请移步顶部访问 国内备用仓库地址](img/how-to-use/run-img-2.jpg)
-### 新手教学[⭐点击开始学习](./docs/novice-teaching/novice.md)
-## 1. 如何使用
-
-wechat-public-account-push 实现自消息推送的原理，是通过调用一系列开放的api实现的, 所以也非常适合初学者学习。
-
-**要使用 wechat-public-account-push, 我们只需要选择合适的消息通道, 得到相关配置信息进行配置即可**
-
-### 1.1. 第一步：选用一个合适的消息通道
-
-您可以在以下消息通道中选择一适合自己的消息通道
-
-**推荐通道**
-
-> iOS 可以无后台推送，推荐使用
-> 
-> 2022年9月22日 Android 无法正常推送，MiPush 把 pushdeer 应用的推送权限暂停。原因是要求pushDeer审核推送内容。
-
-[⭐PushDeer  >>> 点击使用](./docs/message-channel/push-deer.md)
-
-
-**其他通道**
-
-> 免费版每个接收用户每天允许推送200条消息，付费版每个接收用户每天1000条
-> 
-> 1分钟内接收5次请求，超出的请求将不再推送。另外对于相同的内容，1小时内限制发送3条。
->
-> 消息推送时显示的是 **设备通知**，标题需要**进入公众号查看**
->
-> 消息放置在消息列表，方便随时查看
->
-> 不再是xxxx测试号，而是推送加服务号，更美观
->
-> 此通道[可能会被腾讯弃用](https://developers.weixin.qq.com/community/minihome/doc/000a46c7eb8468ba1a1cc863e51401)，请评估风险后再选择
->
-
-[⭐pushplus推送加服务号 >>> 点击使用](./docs/message-channel/push-plus.md)
-
-> 免费版每个接收用户每天允许推送5条消息，付费版每个接收用户每天1000条
->
-> 消息推送时显示的是 **设备通知**，标题需要**进入公众号查看**
-> 
-> 消息放置在消息列表，方便随时查看
->
-> 不再是xxxx测试号，而是方糖服务号，更美观
->
-> 此通道[可能会被腾讯弃用](https://developers.weixin.qq.com/community/minihome/doc/000a46c7eb8468ba1a1cc863e51401)，请评估风险后再选择
->
-
-[⭐server酱服务号 >>> 点击使用](./docs/message-channel/server-chan.md)
-
-> 测试号的标题**不能**修改为自定义的名称，**不能**修改测试号的头像
-> 
-> 推送的消息必须要点进订阅号才能收到
-> 
-> 每次要修改内容必须要自定义模版
-> 
-> 此通道[可能会被腾讯弃用](https://developers.weixin.qq.com/community/minihome/doc/000a46c7eb8468ba1a1cc863e51401)，请评估风险后再选择
-
-[⭐微信测试号 >>> 点击使用](./docs/message-channel/test-number.md)
-
-> 2022年6月20日后创建的应用需要填写可信IP，且可信IP不可公用，因此新应用无法按此配置通道
-> 
-> 2022年9月23日后可信IP无法直接填写，需要验证企业域名才允许使用，意味着此方式将不再向个人提供服务
-
-~~⭐企业微信应用消息 >>>~~(已删除)
-
-
-
-
-### 1.2. 第二步：完成配置文件，并运行wechat-public-account-push
-
-#### 1.2.1 方式一：（可能仅支持微信测试号）使用网页工具自动生成Github-Action配置(不准时，排队执行，胜在免费)
-
-> 以下为@shuangxunian ShuangxuNian大佬 提供的网页配置插件
->
-> 使用时请详细参考其提供的具体文档
->
-> 感谢 ShuangxuNian大佬 的贡献
-
-[✨配置自动生成 传送门 >>>](https://shuangxunian.github.io/wechat-form/)
-
-[❓配置自动生成 教程 >>>](https://github.com/shuangxunian/wechat-form)
-
-[❓配置完成后如何手动运行或者更改自动运行时间? 点开链接查看4. 5. >>>](./docs/how-to-use/github-actions.md)
-
-#### 1.2.2 方式二：使用Github-Action(不准时，排队执行，胜在免费)
-> 世界上最大的同性交友平台(不是)，需要一定的英语基础，**编辑的时候请不要使用网页的自动翻译**
-
-[❓Github-Action部署教程 >>>](./docs/how-to-use/github-actions.md)
-
-#### 1.2.3 方式三：使用Gitee-go(定时任务收费，前200分钟免费，非常准时)
-> 国产代码仓库，和github逻辑基本一致。全中文，对萌新友好。
-
-[❓Gitee-Go部署教程 >>>](./docs/how-to-use/gitee-go.md)
-
-#### 1.2.4 方式四：下载程序包到本地或服务器运行(需要有自己的服务器，使用系统的定时任务非常准时)
-> 如果是 Nodejs 开发者，直接 Clone 源码，然后 VS 打开后即可直接本地进行运行和调试。
->
-> 对于不是开发者的朋友，可以通过以下教程到本地或任意服务器运行
-
-[❓本地或在线服务器部署教程 >>>](./docs/how-to-use/run-in-server.md)
-
-
-#### 1.2.5 方式五：使用云函数运行（需要使用运营商提供的 __付费__ 云函数功能，非常准时)
->由 @ZzqiZQute zz 大佬提供代码迁移及教程编辑
-
-[❓云函数部署教程 >>>](./docs/how-to-use/cloud-function.md)
-
-## 2. 公众号模板参数说明
-
-以下参数可以被微信公众号的模板消息`{{xxx.DATA}}`捕获，用来自定义小伙伴们需要的信息。
-
-目前可被推送模板获取的字段如下：
-
-> ~~删除线~~ 为已废除的参数
-
-**基础类**
-
-| 参数                     | 详细             | 示例           |
-|------------------------|----------------|--------------|
-| to_name.DATA        | 收件人姓名          | 老婆3          |
-| date.DATA              | YYYY-MM-DD 星期d | 2022-08-26 星期五 |
-| province.DATA       | 省份             | 广东           |
-| city.DATA              | 城市             | 惠州           |
-
-**天气类**
-
-| 参数                   | 详细     | 示例                                 |
-|----------------------|--------|------------------------------------|
-| weather.DATA         | 天气     | 阵雨转多云                              |
-| min_temperature.DATA | 最低气温   | 25℃                                |
-| max_temperature.DATA | 最高气温   | 25℃                                |
-| wind_direction.DATA  | 风向     | 持续东南风                              |
-| wind_scale.DATA      | 风级     | <3级                                |
-| shidu.DATA           | 湿度     | 50%                                |
-| pm25.DATA            | PM2.5  | 36                                 |
-| pm10.DATA            | PM1.0  | 54                                 |
-| sunrise.DATA         | 日出时间   | 06:20                              |
-| sunset.DATA          | 日落时间   | 06:20                              |
-| aqi.DATA             | 空气质量指数 | 40                                 |
-| ganmao.DATA          | 预防感冒提醒 | 儿童、老年人及心脏、呼吸系统疾病患者人群应减少长时间或高强度户外锻炼 |
-| notice.DATA          | 天气温馨语  | 雨虽小，注意保暖别感冒                        |
-
-**节假日**
-| 参数 | 详细 | 示例 |
-|------------------------|----------------|----------------|
-| holidaytts.DATA | 下一休息日综合提醒 | 还有3天就周六了，好好工作吧！距离国庆还有18天，早着呢 |
-
-**每日N句**
-
-| 参数                       | 详细        | 示例                                                    |
-|--------------------------|-----------|-------------------------------------------------------|
-| note_en.DATA             | 金山每日一句-英文 | Nothing in this world that's worth having comes easy. |
-| note_ch.DATA             | 金山每日一句-中文 | 这世界上凡是值得拥有的东西，都不易获得。                                  |
-| one_talk.DATA            | 每日一言-内容   | 愿你遍布祖国山河，觉得人生也值得                                      |
-| talk_from.DATA           | 每日一言-来源   | 晓良                                                    |
-| earthy_love_words.DATA   | 土味情话(彩虹屁) | 我今晚会很忙，忙着跟你过日子                                        |
-| moment_copyrighting.DATA | 朋友圈文案     | 错过太阳就不要再错过月亮了                                         |
-| poison_chicken_soup.DATA | 毒鸡汤       | 我从不以强凌弱，我欺负他之前，真不晓得他比我弱。                              |
-| poetry_content.DATA      | 古诗古文-内容   | 举头望明月，低头思故乡。                                          |
-| poetry_title.DATA        | 古诗古文-标题   | 静夜思                                                   |
-| poetry_author.DATA       | 古诗古文-作者   | 李白                                                    |
-| poetry_dynasty.DATA      | 古诗古文-朝代   | 唐代                                                    |
-
-**星座运势**
-
-| 参数                           | 详细   | 示例                |
-|------------------------------|------|-------------------|
-| comprehensive_horoscope.DATA | 综合运势 | 太多了，不示例了，自己调用查看效果 |
-| love_horoscope.DATA          | 爱情运势 | 太多了，不示例了，自己调用查看效果 |
-| career_horoscope.DATA        | 事业学业 | 太多了，不示例了，自己调用查看效果 |
-| wealth_horoscope.DATA        | 财富运势 | 太多了，不示例了，自己调用查看效果 |
-| healthy_horoscope.DATA       | 健康运势 | 太多了，不示例了，自己调用查看效果 |
-
-**计时类**
-
-| 参数                                    | 详细                        | 示例                                                            |
-|---------------------------------------|---------------------------|---------------------------------------------------------------|
-| ~~love_day.DATA~~                     | 已预置, 但是可以删掉, 在配置中自定义, 见下文 | 2674                                                          |
-| ~~marry_day.DATA~~                    | 已预置, 但是可以删掉, 在配置中自定义, 见下文 | 965                                                           |
-| birthday_message.DATA (**微信测试号无法使用**) | 生日消息和节日消息                 | 距离 宝贝 的生日还有122天，距离 中秋节还有30天                                   |
-| course_schedule.DATA (**微信测试号无法使用**)  | 每日的课表                     | 08:00-09:35 高等数学<br/> 09:35-10:35 大学语文 <br/> 10:35-11:35 大学英语 |
-
-
-`{index}`替换为要显示的第N-1个
-
-> 用法示例：
->
-> 距离第1近的生日消息和节日消息请填写
->
-> **wx_birthday_0.DATA** -> 距离 宝贝 的生日还有122天
->
-> 第2节课请填写
->
-> **wx_course_schedule_1.DATA** -> 08:00-09:35 高等数学
->
-> (请确保在配置文件中设置了正确的天数）
-
-| 参数                              | 详细                      | 示例                |
-|---------------------------------|-------------------------|-------------------|
-| wx_birthday_{index}.DATA        | 距离第{index-1}近的生日消息和节日消息 | 距离 宝贝 的生日还有122天   |
-| wx_course_schedule_{index}.DATA | 	第{index-1}节课           | 	08:00-09:35 高等数学 |
-
-**天行简单API**
-
-以下配置需要在[天行数据](https://www.tianapi.com)上申请对应的接口，并将APIKEY放置在配置文件的`TIAN_API.key`字段中
-
-| 参数                             | 详细                                              | 示例                                                                                                                                                  |
-|--------------------------------|-------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| tian_api_morning_greeting.DATA | [点击此处申请接口](https://www.tianapi.com/apiview/143) | 你可能在一个人面前一文不值，却在另一个人面前是无价之宝。谨记自己的价值所在，这就是人挪活的道理所在。早安！                                                                                               |
-| tian_api_evening_greeting.DATA | [点击此处申请接口](https://www.tianapi.com/apiview/142) | 所谓的成熟，就是你越长大越能学会一个人适应一切。晚安！                                                                                                                         |
-| tian_api_network_hot.DATA      | [点击此处申请接口](https://www.tianapi.com/apiview/223) | 1、中国共产党第二十次全国代表大会新闻发言人定于2022年10月15日（星期六）下午在人民大会堂举行新闻发布会。<br/> 2、为了能安然过冬，越来越多的欧洲人向中国制造寻求“解决方案”。在浙江义乌国际商贸城，一外贸公司的采购员表示，现在店里上新速度赶不上欧洲客人问货的节奏。 <br> ... |
-
-**天行天气API**
-
-以下配置需要在[天行数据](https://www.tianapi.com)上申请对应的接口，并将APIKEY放置在配置文件的`TIAN_API.key`字段中
-
-[点击此处申请接口](https://www.tianapi.com/apiview/72)
-
-**该接口每次调用独立按次计费，具体计费规则请查阅接口文档**
-
-`{offset}`替换为距离今天的天数
-
-> 用法示例：
-> 
-> 今天的 天气信息请填写
-> 
-> **tian_api_weather_weather_0.DATA** -> 晴转多云
-> 
-> 明天的 天气信息请填写
-> 
-> **tian_api_weather_weather_1.DATA** -> 多云转晴
-> 
-> (请确保在配置文件中设置了正确的天数）
-
-| 参数                                       | 详细         | 示例                                                        |
-|------------------------------------------|------------|-----------------------------------------------------------|
-| tian_api_weather_date_{offset}.DATA      | 日期         | 2020-03-23                                                |
-| tian_api_weather_week_{offset}.DATA      | 	星期        | 	星期一                                                      |
-| tian_api_weather_weather_{offset}.DATA   | 早晚天气变化     | 晴转多云                                                      |
-| tian_api_weather_real_{offset}.DATA      | 	实时天气      | 18℃                                                       |
-| tian_api_weather_lowest_{offset}.DATA    | 	最低温       | 	6℃                                                       |
-| tian_api_weather_highest_{offset}.DATA   | 最高温        | 	22℃                                                      |
-| tian_api_weather_wind_{offset}.DATA      | 	风向        | 东南风                                                       |
-| tian_api_weather_winddeg_{offset}.DATA   | 	风向360°角度  | 121                                                       |
-| tian_api_weather_windspeed_{offset}.DATA | 	风速，km/h   | 	7                                                        |
-| tian_api_weather_windsc_{offset}.DATA    | 	风力        | 1-2级                                                      |
-| tian_api_weather_sunrise_{offset}.DATA   | 	日出时间      | 	06:10                                                    |
-| tian_api_weather_sunset_{offset}.DATA    | 日落时间       | 	18:31                                                    |
-| tian_api_weather_moonrise_{offset}.DATA  | 	月升时间      | 06:02                                                     |
-| tian_api_weather_moondown_{offset}.DATA  | 	月落时间      | 17:22                                                     |
-| tian_api_weather_pcpn_{offset}.DATA      | 	降雨量       | 	0.0                                                      |
-| tian_api_weather_pop_{offset}.DATA       | 	降雨概率      | 1                                                         |
-| tian_api_weather_uv_index_{offset}.DATA  | 	紫外线强度指数   | 	9                                                        |
-| tian_api_weather_vis_{offset}.DATA       | 	能见度，单位：公里 | 	9                                                        |
-| tian_api_weather_humidity_{offset}.DATA  | 	相对湿度      | 23                                                        |
-| tian_api_weather_tips_{offset}.DATA      | 	生活指数提示    | 天气暖和，适宜着单层棉麻面料的短套装、T恤衫、薄牛仔衫裤、休闲服、职业套装等春秋过渡装。年老体弱者请适当增减衣服。 |
-
-**推送回执(特有, 仅在其他模板发送完成后才能获取)**
-
-| 参数                    | 详细        | 示例                  |
-|-----------------------|-----------|---------------------|
-| post_time_zone.DATA   | 服务器时区     | Asia/Shanghai       |
-| post_time.DATA        | 服务器执行脚本时间 | 2022-08-31 19:41:57 |
-| need_post_num.DATA    | 共需推送N人    | 4                   |
-| success_post_num.DATA | 成功推送N人    | 1                   |
-| fail_post_num.DATA    | 推送失败N人    | 3                   |
-| success_post_ids.DATA | 推送成功的用户   | 老婆0                 |
-| fail_post_ids.DATA    | 推送失败的用户   | 老婆1,老婆2,老婆3         |
-
-**自定义计时及自定义文本插槽**
-
-小伙伴在只要在`CUSTOMIZED_DATE_LIST` 和 `SLOT_LIST` 中按格式填写相应内容
-
-微信测试模板即可获取到你配置中设置好的内容了。
-
-例如，您可以在配置文件中设置一个 `love_day`, 然后在【微信模型消息】中就可以用`{{love_day.DATA}}` 获取到内容了。
-
-```
-么么哒！
-今天是我们在一起的的第{{love_day.DATA}}天
-
-爱你！
+# wechat-public-account-push
+
+使用微信公众平台**测试号**，每天定时给指定的微信用户推送模板消息：天气、纪念日、生日倒计时、每日一句、星座运势、课程表等。
+
+程序运行在 GitHub Actions 上，不需要服务器；所有个人信息都保存在 GitHub Secrets 中，不会出现在仓库代码里。
+
+## 功能
+
+- 支持多个收件人，每个人可以使用不同的模板
+- 每日天气
+- 金山每日一句、每日一言、土味情话、朋友圈文案、毒鸡汤、古诗词
+- 生日和节日倒计时，支持农历
+- 纪念日计时，例如「今天是我们在一起的第 N 天」
+- 星座运势
+- 大学生课程表，支持单双周
+- 自定义文本插槽
+- 推送完成回执
+- [天行数据](https://www.tianapi.com) 接口：早安/晚安心语、全网热搜、天气预报
+
+## 快速开始
+
+### 1. 注册微信测试号并创建模板
+
+按照 [微信测试号配置教程](./docs/message-channel/test-number.md) 完成注册，记下以下信息：
+
+- 测试号的 **appID** 和 **appsecret**
+- 接收消息的用户扫码关注测试号后得到的 **微信号**（openid）
+- 新建模板后得到的 **模板ID**
+
+模板内容可以参考 [常用的推送模板样例](./docs/how-to-use/default-model.md)，可用的参数见下文 [模板参数](#模板参数)。
+
+### 2. Fork 本仓库
+
+点击右上角的 **Fork**。
+
+### 3. 配置 GitHub Secrets
+
+进入 Fork 后的仓库，打开 **Settings → Secrets and variables → Actions**，点击 **New repository secret** 添加以下内容：
+
+| 名称                   | 必填 | 说明                                                                             |
+| ---------------------- | ---- | -------------------------------------------------------------------------------- |
+| `APP_ID`               | 是   | 测试号的 appID                                                                   |
+| `APP_SECRET`           | 是   | 测试号的 appsecret                                                               |
+| `USERS`                | 是   | 接收消息的用户，JSON 数组，见下方示例                                            |
+| `CALLBACK_TEMPLATE_ID` | 否   | 【推送完成提醒】的模板ID，不填则不发送回执                                       |
+| `CALLBACK_USERS`       | 否   | 接收推送完成提醒的用户，JSON 数组，格式为 `[{ "name": "自己", "id": "微信号" }]` |
+| `TIAN_API`             | 否   | 天行数据的 APIKEY                                                                |
+| `USER_INFO`            | 否   | JSON 对象，可以覆盖 `config/index.ts` 中的任意配置                               |
+
+`USERS` 示例：
+
+```json
+[
+  {
+    "name": "宝贝",
+    "id": "扫码关注测试号后得到的微信号",
+    "useTemplateId": "模板ID",
+    "province": "广东",
+    "city": "惠州",
+    "horoscopeDate": "09-02",
+    "festivals": [
+      { "type": "*生日", "name": "宝贝", "year": "1999", "date": "08-15" },
+      { "type": "节日", "name": "相识纪念日", "year": "2021", "date": "05-20" }
+    ],
+    "customizedDateList": [
+      { "keyword": "love_day", "date": "2021-05-20" }
+    ]
+  }
+]
 ```
 
-> 大概的实现原理类似于下图标注的这样：
-> 
-> ![图片无法查看请移步顶部访问 国内备用仓库地址](img/how-to-use/self-keyword.png)
-> 
-> 但是有以下情况需要注意，不要占用表中已有的关键字，会发生不可预料的状况噢！
-> 
-> ![图片无法查看请移步顶部访问 国内备用仓库地址](img/how-to-use/self-keyword-2.png)
+每个用户的全部可选字段见 [配置说明](./docs/how-to-use/config-demo.md)。
 
-## 3. config参数说明
-> 配置文件的详细说明，使用旧配置的小伙伴可以对照此文档增加新的配置
+### 4. 启用并测试 GitHub Actions
 
-[❓config参数说明 >>>](./docs/how-to-use/config-demo.md)
+1. 打开仓库的 **Actions** 页面，Fork 的仓库默认禁用了 Actions，点击启用
+2. 选择 **weixin-push-on-time**，点击 **Run workflow** 手动运行一次，确认能收到消息
+3. 之后会按照定时任务每天自动运行
 
-## 4. template-config推送模板参数说明
-> 配置文件的详细说明，使用旧配置的小伙伴可以对照此文档增加新的配置
+也可以运行 **weixin-push-on-time-params-log**，它只会在日志中打印模板参数，不会推送消息，适合用来检查配置。
 
-[❓template-config推送模板参数说明 >>>](./docs/how-to-use/template-config-demo.md)
+> 公开仓库的 Actions 日志所有人都能看到，打印的参数中包含名字、纪念日等信息，检查完配置后可以删除这次运行记录。
 
-## 5. 常用的推送模板样例
-> 收录一些常用好看的模板消息
+更详细的图文步骤见 [GitHub Actions 部署教程](./docs/how-to-use/github-actions.md)。
 
-[❓常用的推送模板样例 >>>](./docs/how-to-use/default-model.md)
+## 修改推送时间
 
+定时任务配置在 `.github/workflows/weixin-push-on-time.yml` 中，默认为每天 UTC 0:00，即**北京时间 8:00**：
 
-## 6. GitHub/Gitee 如何更改自动执行时间
-
-### 6.1 github action如何更改自动执行时间
-
-这里的脚本使用的是 github 的 workflow 定时任务, 具体脚本文件放置在:
-
-```
-wechat-public-account-push/.github/workflows/weixin-push-on-time.yml
-```
-
-这里简单说明一下如何更改自动执行时间
-
-目前脚本默认执行时间为 **每天的 北京时间上午 07:30**
-
-如果想要变更脚本定时任务执行时间,可以更改以下代码段
-
-```
+```yaml
 on:
- workflow_dispatch:
- schedule:
-  # 每天国际时间2:10 运行, 即北京时间 10:10 运行
-  - cron: '30 23 * * *'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
 ```
 
-**推荐设置: `30 22 * * *` 或 `30 23 * * *` 等冷门时间，拥堵率低**
+cron 使用 UTC 时间，北京时间需要减去 8 小时，例如北京时间 7:30 对应 `30 23 * * *`，可以使用 [crontab.guru](https://crontab.guru) 辅助编写。
 
-**定时任务注意尽量避免设置在 `utc 0:00, XX:00` 这类高拥堵时段。**
+GitHub Actions 的定时任务需要排队，整点（尤其是 UTC 0:00）比较拥堵，可能会延迟较久，推荐设置为 `30 22 * * *` 这类非整点时间。
 
-**定时任务注意尽量避免设置在 `utc 0:00, XX:00` 这类高拥堵时段。**
+## 配置说明
 
-**定时任务注意尽量避免设置在 `utc 0:00, XX:00` 这类高拥堵时段。**
+配置分为两部分：
 
-![图片无法查看请移步顶部访问 国内备用仓库地址](img/how-to-use/action-cron.png)
+- `config/index.ts`：功能开关等**非敏感**配置，会公开在仓库中，请不要在这里填写个人信息
+- 环境变量（GitHub Secrets）：appID、用户微信号、模板ID 等**敏感**信息
 
-或使用[https://crontab.guru](https://crontab.guru)帮助配置
+优先级为：单项环境变量（`APP_ID`、`USERS` 等） > `USER_INFO` > `config/index.ts`
 
-### 6.2 gitee go如何更改自动执行时间
+全部配置项见 [配置说明](./docs/how-to-use/config-demo.md)。
 
-![图片无法查看请移步顶部访问 国内备用仓库地址](img/gitee/gitee-workflow10.png)
+## 模板参数
 
-![图片无法查看请移步顶部访问 国内备用仓库地址](img/gitee/gitee-workflow11.png)
+微信测试号的模板中可以使用 `{{参数.DATA}}` 获取以下内容。
 
-## 7. 常见问题
+### 基础
 
-[关于获取accessToken:请求失败invalid appsecret rid xxxxx](https://github.com/wangxinleo/wechat-public-account-push/discussions/68)
+| 参数          | 说明             | 示例              |
+| ------------- | ---------------- | ----------------- |
+| to_name.DATA  | 收件人名字       | 宝贝              |
+| date.DATA     | YYYY-MM-DD 星期d | 2022-08-26 星期五 |
+| province.DATA | 省份             | 广东              |
+| city.DATA     | 城市             | 惠州              |
 
-[关于推送失败，报40001- 4000X](https://github.com/wangxinleo/wechat-public-account-push/discussions/39)
+### 天气
 
-[关于目前仅支持测试号的问题](https://github.com/wangxinleo/wechat-public-account-push/discussions/23)
+| 参数                 | 说明         | 示例                                                                 |
+| -------------------- | ------------ | -------------------------------------------------------------------- |
+| weather.DATA         | 天气         | 阵雨转多云                                                           |
+| min_temperature.DATA | 最低气温     | 25℃                                                                  |
+| max_temperature.DATA | 最高气温     | 32℃                                                                  |
+| wind_direction.DATA  | 风向         | 持续东南风                                                           |
+| wind_scale.DATA      | 风级         | <3级                                                                 |
+| shidu.DATA           | 湿度         | 50%                                                                  |
+| pm25.DATA            | PM2.5        | 36                                                                   |
+| pm10.DATA            | PM10         | 54                                                                   |
+| sunrise.DATA         | 日出时间     | 06:20                                                                |
+| sunset.DATA          | 日落时间     | 18:20                                                                |
+| aqi.DATA             | 空气质量指数 | 40                                                                   |
+| ganmao.DATA          | 预防感冒提醒 | 儿童、老年人及心脏、呼吸系统疾病患者人群应减少长时间或高强度户外锻炼 |
+| notice.DATA          | 天气温馨语   | 雨虽小，注意保暖别感冒                                               |
 
-[关于定时任务好像没有自动执行（?）](https://github.com/wangxinleo/wechat-public-account-push/discussions/20)
+### 节假日
 
-[Issues（议题）](https://github.com/wangxinleo/wechat-public-account-push/issues)板块可以用来提交**Bug**和**建议**；
+| 参数            | 说明               | 示例                                            |
+| --------------- | ------------------ | ----------------------------------------------- |
+| holidaytts.DATA | 下一休息日综合提醒 | 还有3天就周六了，好好工作吧！距离国庆节还有18天 |
 
-[Discussions（讨论）](https://github.com/wangxinleo/wechat-public-account-push/discussions)板块可以用来**提问**和**讨论**。
+下一休息日根据法定节假日和调休安排在本地计算，不依赖外部接口。放假安排数据来自 [lunar-javascript](https://github.com/6tail/lunar-javascript)，每年国务院公布次年安排后需要更新该依赖（同步 fork 即可）；还没有数据的年份只按节日当天和周末计算。
 
-所以如果你有疑问，
+### 每日一句
 
-* 请先确认是否可以通过升级到最新版本解决
-* 然后搜索文档（特别是配置说明文档和常见问题文档）查看是否已有解决方案
+| 参数                     | 说明              | 示例                                                  |
+| ------------------------ | ----------------- | ----------------------------------------------------- |
+| note_en.DATA             | 金山每日一句-英文 | Nothing in this world that's worth having comes easy. |
+| note_ch.DATA             | 金山每日一句-中文 | 这世界上凡是值得拥有的东西，都不易获得。              |
+| one_talk.DATA            | 每日一言-内容     | 愿你遍布祖国山河，觉得人生也值得                      |
+| talk_from.DATA           | 每日一言-来源     | 晓良                                                  |
+| earthy_love_words.DATA   | 土味情话          | 我今晚会很忙，忙着跟你过日子                          |
+| moment_copyrighting.DATA | 朋友圈文案        | 错过太阳就不要再错过月亮了                            |
+| poison_chicken_soup.DATA | 毒鸡汤            | 我从不以强凌弱，我欺负他之前，真不晓得他比我弱。      |
+| poetry_content.DATA      | 古诗词-内容       | 举头望明月，低头思故乡。                              |
+| poetry_title.DATA        | 古诗词-标题       | 静夜思                                                |
+| poetry_author.DATA       | 古诗词-作者       | 李白                                                  |
+| poetry_dynasty.DATA      | 古诗词-朝代       | 唐代                                                  |
 
-如果确认还未解决，可以自己提交 Issue，我会尽快确认并解决。
+### 星座运势
 
-## 8. 版本发布及更新
+需要在用户配置中填写 `horoscopeDate`。
 
-关于新版本发布后，如何同步最新的内容到自己 Fork 的仓库
+| 参数                         | 说明     |
+| ---------------------------- | -------- |
+| comprehensive_horoscope.DATA | 综合运势 |
+| love_horoscope.DATA          | 爱情运势 |
+| career_horoscope.DATA        | 事业学业 |
+| wealth_horoscope.DATA        | 财富运势 |
+| healthy_horoscope.DATA       | 健康运势 |
 
-### 8.1 重新fork
+### 生日、节日和课程表
 
-**删掉后重新Fork会导致之前配置过的GitHub Secrets和提交的代码更改全部丢掉，只能重新部署。**
+测试号模板不支持换行，多条内容请使用带序号的参数，`{index}` 从 0 开始。
 
-### 8.2 GitHub Fetch Upstream Branch
+| 参数                            | 说明                                                  | 示例                              |
+| ------------------------------- | ----------------------------------------------------- | --------------------------------- |
+| wx_birthday_{index}.DATA        | 第 index+1 近的生日或节日                             | 距离 「宝贝」 的公历生日还有122天 |
+| wx_course_schedule_{index}.DATA | 今天的第 index+1 节课                                 | 08:00-09:35 高等数学              |
+| birthday_message.DATA           | 全部生日和节日，多行内容                              |                                   |
+| course_schedule.DATA            | 今天的全部课程，多行内容，没有课时为「今天没有课哟~」 |                                   |
 
-- 在自己的项目仓库中选择 "Sync fork"
+### 自定义纪念日和文本插槽
 
-- 点击 "Update branch" 完成
+在用户配置的 `customizedDateList`（或全局的 `CUSTOMIZED_DATE_LIST`）中添加的 `keyword` 会作为模板参数，值为距离该日期的天数；`SLOT_LIST` 中的 `keyword` 会被替换为对应的文本。例如配置了 `{ "keyword": "love_day", "date": "2021-05-20" }` 后，模板中可以这样使用：
 
-![图片无法查看请移步顶部访问 国内备用仓库地址](img/how-to-use/pr-1.png)
-
-可能会遇到 **因为冲突需要你们删除你们已经更改的记录**
-
-如果只是纯粹更改配置，放心大胆的点删除, 然后更新最新代码仓库就好了。
-
-如果**你更改了源代码进行了部分定制**, 请注意备份代码段。
-
-### 8.3 actions 脚本自动
-
-**以后会考虑加入actions 脚本每周自动更新fork仓库，但是目前精力不足，只能采用上述保守方案**
-
-建议每个人先看看更新的内容是否是自己需要的再进行更新。
-
-也建议把右上角的 Star 点一下，这样有重要更新时就会有邮件推送了。
-
-## 9 成为开源贡献成员
-
-### 9.1 贡献代码
-
-如果你有好的想法，欢迎向仓库贡献你的代码，贡献步骤：
-
-* 搜索查看 Issue，确定是否已有人提过同类问题或者有新的想法
-
-
-* 确认没有同类 Issue 后，自己可新建 Issue，描述问题或建议
-
-
-* 如果想自己解决，请 Fork 仓库后，在**develop 分支**进行编码开发，完成后**提交 PR 到 develop 分支**，并标注解决的 Issue 编号
-
-我会尽快进行代码审核，测试成功后会合并入 main 主分支，提前感谢您的贡献。
-
-### 9.2 贡献文档
-
-文档部分由于我个人精力有限（写文档比写代码累多了），所以有些地方写的很简略，甚至有遗漏和错别字，不能贡献代码的朋友也欢迎来一起维护文档，欢迎
-PR 来纠正我，一样都算是对开源做贡献了。
-
-## 10. 致谢
-
-### 贡献/参与者
-
-@LordonCN Lordon
-
-@ZzqiZQute zz
-
-@shuangxunian ShuangxuNian
-
-@只会前端的小废物
-
-感谢那些默默支持我, 鼓励我继续更新这个小玩具的朋友。
-
-感谢所有参与到开发/测试中的朋友们，是大家的帮助让 TA 越来越好！ (*´▽｀)ノノ
-
-## 11. wechat-public-account-push答疑群
-
-不管文档写得多详细，还是会有人不会呐！还是建个群答疑吧!
-
-群我隐藏在文档里了哼哼，不仔细看文档可找不到加群的地方哦！
-
-2022-09-10 算啦还是不隐藏了，你们来尽情问吧。
-
-![图片无法查看请移步顶部访问 国内备用仓库地址](img/how-to-use/wechat-public-account-push.png)
-
-<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=y0plwm9zhOI35EwlOdRh372g4KWbqMSt&jump_from=webapi"><img border="0" src="https://pub.idqqimg.com/wpa/images/group.png" alt="wechat-public-account-push 交流群" title="wechat-public-account-push 交流群"></a>
-
-## 12. 运行
-
-注意，在官方文档中有这么一段：
-
-```
-To prevent unnecessary workflow runs, scheduled workflows may be disabled automatically. When a public repository is forked, scheduled workflows are disabled by default. In a public repository, scheduled workflows are automatically disabled when no repository activity has occurred in 60 days.
+```text
+今天是我们在一起的第{{love_day.DATA}}天
 ```
 
-也就是说，定时执行的任务需要每隔 60 天激活一次。
+自定义的 `keyword` 不要与本页中已有的参数重名。
 
-使用 “import repository” 功能重新导入自己已经fork过的仓库，选为私有后，就不会出现这种情况了。
+### 天行数据
 
-## 13. 其他
+需要在 [天行数据](https://www.tianapi.com) 控制台分别申请用到的接口，并配置 `TIAN_API` Secret；没有申请的接口会返回 `160 当前未申请该API`。
 
-时区查询: [https://www.zeitverschiebung.net/cn/all-time-zones.html](https://www.zeitverschiebung.net/cn/all-time-zones.html)
+程序使用天行的新接口域名 `apis.tianapi.com`（旧域名 `api.tianapi.com` 已于 2025 年 10 月停止维护），原有的 APIKEY 可以直接使用。
 
-城市数据: [https://github.com/baichengzhou/weather.api/blob/master/src/main/resources/citycode-2019-08-23.json](https://github.com/baichengzhou/weather.api/blob/master/src/main/resources/citycode-2019-08-23.json)
+| 参数                           | 说明                                            |
+| ------------------------------ | ----------------------------------------------- |
+| tian_api_morning_greeting.DATA | [早安心语](https://www.tianapi.com/apiview/143) |
+| tian_api_evening_greeting.DATA | [晚安心语](https://www.tianapi.com/apiview/142) |
+| tian_api_network_hot.DATA      | [全网热搜](https://www.tianapi.com/apiview/223) |
 
-<!-- ## 11. 叨叨两句
+[天气预报](https://www.tianapi.com/apiview/72)接口按次计费，`{offset}` 为距离今天的天数，例如今天的天气为 `tian_api_weather_weather_0.DATA`，明天为 `tian_api_weather_weather_1.DATA`，展示的天数由 `TIAN_API.weather` 配置。
 
-**这个仓库只能算是重复实现一下别人的想法, 主要是了解到了这个想法却一直找不到原作者的源码很是苦恼, 结果还遇到了要求加关注的情况**
+| 参数                                     | 说明               |
+| ---------------------------------------- | ------------------ |
+| tian_api_weather_date_{offset}.DATA      | 日期               |
+| tian_api_weather_week_{offset}.DATA      | 星期               |
+| tian_api_weather_weather_{offset}.DATA   | 早晚天气变化       |
+| tian_api_weather_real_{offset}.DATA      | 气温（估测值）     |
+| tian_api_weather_lowest_{offset}.DATA    | 最低温             |
+| tian_api_weather_highest_{offset}.DATA   | 最高温             |
+| tian_api_weather_wind_{offset}.DATA      | 风向               |
+| tian_api_weather_winddeg_{offset}.DATA   | 风向360°角度       |
+| tian_api_weather_windspeed_{offset}.DATA | 风速，km/h         |
+| tian_api_weather_windsc_{offset}.DATA    | 风力               |
+| tian_api_weather_sunrise_{offset}.DATA   | 日出时间           |
+| tian_api_weather_sunset_{offset}.DATA    | 日落时间           |
+| tian_api_weather_moonrise_{offset}.DATA  | 月升时间           |
+| tian_api_weather_moondown_{offset}.DATA  | 月落时间           |
+| tian_api_weather_pcpn_{offset}.DATA      | 降雨量             |
+| tian_api_weather_pop_{offset}.DATA       | 降雨概率           |
+| tian_api_weather_uv_index_{offset}.DATA  | 紫外线强度指数     |
+| tian_api_weather_vis_{offset}.DATA       | 能见度，单位：公里 |
+| tian_api_weather_humidity_{offset}.DATA  | 相对湿度           |
+| tian_api_weather_tips_{offset}.DATA      | 生活指数提示       |
 
-**真的非常不喜欢目前国内论坛/某乎/某书/某字母站的博主在分享一些有趣的项目后,甚至是分享了教程之后却不提供源码链接,要求关注公众号或QQ群才进行分享**
+### 推送完成提醒
 
-**虽然我无权谴责这些流量变现的做法, 但是我认为作者既然开源自己的作品, 那就是希望其他人能一起体会coding的喜悦, 请部分博主尊重作者意愿, 尊重开源协议**
+仅能在 `CALLBACK_TEMPLATE_ID` 对应的模板中使用，在所有消息推送完成后发送。
 
-![图片无法查看请移步顶部访问 国内备用仓库地址](img/how-to-use/dis.png)
+| 参数                  | 说明               | 示例                |
+| --------------------- | ------------------ | ------------------- |
+| post_time_zone.DATA   | 服务器时区         | UTC                 |
+| post_time.DATA        | 服务器执行脚本时间 | 2022-08-31 19:41:57 |
+| need_post_num.DATA    | 共需推送N人        | 3                   |
+| success_post_num.DATA | 成功推送N人        | 2                   |
+| fail_post_num.DATA    | 推送失败N人        | 1                   |
+| success_post_ids.DATA | 推送成功的用户     | 宝贝,自己           |
+| fail_post_ids.DATA    | 推送失败的用户     | 朋友                |
 
-![图片无法查看请移步顶部访问 国内备用仓库地址](img/how-to-use/dis-2.png) -->
+## 常见问题
+
+**获取 accessToken 失败，提示 40001 / invalid appsecret**
+
+检查 `APP_ID` 和 `APP_SECRET` 是否正确；如果是第一次使用测试号，可以退出测试号平台后重新扫码登录，获取最新的 appID 和 appsecret。
+
+**推送失败，提示 40003 或 40036**
+
+40003 表示用户的 `id` 不正确，应填写用户扫码关注测试号后生成的微信号；40036 表示 `useTemplateId` 不正确。
+
+**提示「没有需要推送的用户」或「不是合法的 JSON」**
+
+检查 `USERS` Secret 是否已添加、是否为合法的 JSON 数组。常见错误是使用了中文引号、在最后一项后面多写了逗号。
+
+**定时任务没有自动执行**
+
+- Fork 的仓库需要先在 Actions 页面手动启用
+- 定时任务需要排队，延迟几十分钟属于正常现象
+- 公开仓库 60 天内没有任何提交时，GitHub 会自动停用定时任务，需要到 Actions 页面重新启用
+
+**模板显示不完整**
+
+2023 年 5 月起，微信测试号模板不再支持自定义颜色、换行和部分 emoji，单个字段超过 20 个字会显示为省略号，详见 [常用的推送模板样例](./docs/how-to-use/default-model.md)。
+
+**如何同步更新**
+
+在 Fork 的仓库页面点击 **Sync fork → Update branch**。个人信息都保存在 Secrets 中，同步时不会丢失；如果修改过 `config/index.ts`，可能需要处理冲突。
+
+## 本地开发
+
+项目使用 TypeScript 编写，使用 [pnpm](https://pnpm.io) 管理依赖，需要 Node.js `^22.22.2 || ^24.15.0 || >=26`（推荐 Node.js 24）。
+
+```bash
+pnpm install         # 安装依赖
+pnpm params-log      # 构建并打印模板参数（不推送）
+pnpm dev             # 构建并推送消息
+pnpm start           # 运行已构建的 dist/main.js（GitHub Actions 使用）
+pnpm test            # 运行单元测试 (Vitest)
+pnpm typecheck       # 类型检查
+pnpm lint            # 代码检查 (ESLint)
+pnpm format          # 代码格式化 (Prettier)
+```
+
+本地运行时，把 `.env.example` 复制为 `.env` 并填写，`pnpm dev` 和 `pnpm params-log` 会自动读取。`.env` 已被 git 忽略，不会提交到仓库；已设置的系统环境变量优先于 `.env` 中的值。
+
+目录结构：
+
+```text
+config/index.ts      非敏感配置
+src/config.ts        合并配置文件与环境变量
+src/main.ts          程序入口
+src/services/        数据获取及消息推送
+src/utils/           工具函数
+src/store/           城市数据及默认文案
+__tests__/           单元测试
+```
+
+## License
+
+[MIT](./LICENSE)

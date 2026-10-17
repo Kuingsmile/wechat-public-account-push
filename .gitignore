@@ -1,7 +1,5 @@
 # Logs
 logs
-cloud
-!img/cloud
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -106,3 +104,6 @@ dist
 .tern-port
 
 .idea
+
+# GitHub Actions secrets
+.github_token
