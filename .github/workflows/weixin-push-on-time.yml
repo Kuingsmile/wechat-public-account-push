@@ -6,7 +6,7 @@ on:
   schedule:
     # 每天 UTC 0:00 运行，即北京时间 8:00
     # GitHub Actions 的定时任务需要排队，实际执行时间可能会有延迟
-    - cron: '0 0 * * *'
+    - cron: '37 23 * * *'
 
 permissions:
   contents: read
